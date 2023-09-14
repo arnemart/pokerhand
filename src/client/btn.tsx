@@ -8,7 +8,8 @@ const Btn = (props: JSX.HTMLAttributes<HTMLButtonElement>) => (
       py-2 px-4
       border border-black rounded
       bg-gray-200
-      hover:bg-gray-300`}
+      hover:bg-gray-300
+      transition-all`}
   />
 )
 export default Btn

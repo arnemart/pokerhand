@@ -1,4 +1,4 @@
-import { shuffle, group, zip } from "./utils"
+import { shuffle, frequencies, zip } from "./utils"
 
 export const RANKS = [
   "High card",
@@ -36,16 +36,12 @@ const sequential = (nums: string[]): { isSequential: boolean; acesLow: boolean }
   return { isSequential: false, acesLow: false }
 }
 
+type Rank = (typeof RANKS)[number]
+
 export type Classification = {
   hand: Hand
-  rank: (typeof RANKS)[number]
+  rank: Rank
   order: string[]
-}
-
-export type Round = {
-  hand1: Classification
-  hand2: Classification
-  winner: 1 | 2
 }
 
 export const orderHands = (hands: Classification[]): Classification[] =>
@@ -67,27 +63,15 @@ export const orderHands = (hands: Classification[]): Classification[] =>
     return 0
   })
 
-export const playRound = (hand1: Hand, hand2: Hand): Round => {
-  const h1 = classify(hand1)
-  const h2 = classify(hand2)
-  const hands = orderHands([h1, h2])
-  return {
-    hand1: h1,
-    hand2: h2,
-    winner: hands[0] == h1 ? 1 : 2
-  }
-}
-
 export const classify = (hand: Hand): Classification => {
   hand = hand.sort(compareCards)
   const splitHand = hand.map((c) => c.split(""))
-  const suits = splitHand.map((c) => c[0])
-  const uniqueSuits = [...new Set(suits)]
+  const uniqueSuits = [...new Set(splitHand.map((c) => c[0]))]
   const nums = splitHand.map((c) => c[1])
-  const groupedNums = group(nums)
-  const uniqueNums = Object.keys(groupedNums)
-  const largestGroup = Math.max(...Object.values(groupedNums))
-  const sortedNumGroups = Object.entries(groupedNums)
+  const numCounts = frequencies(nums)
+  const uniqueNums = Object.keys(numCounts)
+  const largestGroup = Math.max(...Object.values(numCounts))
+  const orderedNumGroups = Object.entries(numCounts)
     .sort(
       ([a, aCount], [b, bCount]) =>
         bCount * 100 + NUMS.indexOf(b) - (aCount * 100 + NUMS.indexOf(a))
@@ -104,11 +88,11 @@ export const classify = (hand: Hand): Classification => {
   }
 
   if (uniqueNums.length == 2 && largestGroup == 4) {
-    return { hand, rank: "Four of a kind", order: sortedNumGroups }
+    return { hand, rank: "Four of a kind", order: orderedNumGroups }
   }
 
   if (uniqueNums.length == 2 && largestGroup == 3) {
-    return { hand, rank: "Full house", order: sortedNumGroups }
+    return { hand, rank: "Full house", order: orderedNumGroups }
   }
 
   if (uniqueSuits.length == 1) {
@@ -116,19 +100,23 @@ export const classify = (hand: Hand): Classification => {
   }
 
   if (isSequential) {
-    return { hand, rank: "Straight", order: acesLow ? nums.slice(-2, -1) : nums.slice(-1) }
+    return {
+      hand,
+      rank: "Straight",
+      order: acesLow ? nums.slice(-2, -1) : nums.slice(-1)
+    }
   }
 
   if (uniqueNums.length == 3 && largestGroup == 3) {
-    return { hand, rank: "Three of a kind", order: sortedNumGroups }
+    return { hand, rank: "Three of a kind", order: orderedNumGroups }
   }
 
   if (uniqueNums.length == 3 && largestGroup == 2) {
-    return { hand, rank: "Two pair", order: sortedNumGroups }
+    return { hand, rank: "Two pair", order: orderedNumGroups }
   }
 
   if (uniqueNums.length == 4 && largestGroup == 2) {
-    return { hand, rank: "One pair", order: sortedNumGroups }
+    return { hand, rank: "One pair", order: orderedNumGroups }
   }
 
   return { hand, rank: "High card", order: nums.reverse() }

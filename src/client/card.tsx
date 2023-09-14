@@ -20,10 +20,14 @@ export default ({ name, offset }: CardProps) => {
     <div
       class={`
         ${color == "red" ? "text-red-700" : "text-black"}
+        ${offset == null ? "relative" : "absolute"}
         p-2 w-16 h-20
+        cursor-default
         border border-black rounded bg-white
-        grid place-content-center`}
-      style={offset == null ? {} : { position: "absolute", top: 0, left: offset }}
+        grid place-content-center
+        top-0 hover:-top-2
+        transition-all`}
+      style={offset == null ? {} : { left: offset }}
     >
       {name == "blank" ? (
         <span>

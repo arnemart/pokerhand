@@ -1,12 +1,5 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify"
-import {
-  Classification,
-  Hand,
-  classify,
-  orderHands,
-  playRound,
-  shuffledDeck
-} from "../shared/cards"
+import { Classification, Hand, classify, orderHands, shuffledDeck } from "../shared/cards"
 
 export default (
   server: FastifyInstance,

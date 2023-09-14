@@ -21,8 +21,9 @@ await server.register(FastifyVite, {
 const redisClient = createClient({
   url: process.env.REDIS_URL || "redis://localhost:6379"
 })
-redisClient.on("error", (err) => console.log("Redis Client Error", err))
+redisClient.on("error", (err) => server.log.error("Redis Client Error", err))
 await redisClient.connect()
+
 const redisStore = new RedisStore({
   client: redisClient
 })
@@ -44,7 +45,7 @@ server.addHook("preHandler", (request, _reply, next) => {
   next()
 })
 
-server.register(api, { prefix: "/api" })
+await server.register(api, { prefix: "/api" })
 
 server.get("/", (_request, reply) => reply.html())
 

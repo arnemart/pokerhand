@@ -11,10 +11,9 @@ export const shuffle = <T>(arr: T[]): T[] => {
   return result
 }
 
-export const group = (arr: string[]): Record<string, number> =>
+export const frequencies = (arr: string[]): Record<string, number> =>
   arr.reduce((groups, el) => {
-    groups[el] ||= 0
-    groups[el]++
+    groups[el] = (groups[el] || 0) + 1
     return groups
   }, {} as Record<string, number>)
 
