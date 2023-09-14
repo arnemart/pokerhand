@@ -5,6 +5,7 @@ Small sample application to draw, classify and rank poker hands.
 The application uses:
 
 - Docker
+- Node
 - Typescript
 - Fastify as the web server framework
 - Redis for session storage
