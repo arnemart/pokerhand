@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "@fastify/cookie": "^9.0.4",
+    "@fastify/session": "^10.5.0",
+    "@fastify/vite": "^4.0.0",
+    "autoprefixer": "^10.4.15",
+    "connect-redis": "^7.1.0",
+    "fastify": "^4.23.0",
+    "postcss": "^8.4.29",
+    "preact": "^10.17.1",
+    "redis": "^4.6.8",
+    "tailwindcss": "^3.3.3",
+    "tsx": "^3.12.9",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.0"
+  },
+  "type": "module",
+  "scripts": {
+    "prestart": "vite build",
+    "start": "tsx src/server",
+    "dev": "NODE_ENV=development tsx src/server"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "printWidth": 100,
+    "semi": false
+  }
+}

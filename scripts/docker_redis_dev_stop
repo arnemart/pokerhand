@@ -1,0 +1,2 @@
+#!/bin/sh
+docker kill poker-redis-dev

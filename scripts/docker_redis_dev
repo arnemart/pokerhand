@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run --rm -p 6379:6379 --name poker-redis-dev -d redis:alpine

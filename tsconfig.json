@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  }
+}

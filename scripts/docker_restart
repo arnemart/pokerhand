@@ -1,0 +1,4 @@
+#!/bin/sh
+scripts/docker_stop
+sleep 1
+scripts/docker_start
