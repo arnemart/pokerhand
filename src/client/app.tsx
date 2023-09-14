@@ -14,7 +14,7 @@ export default () => {
 
   return (
     <main class="p-4 flex flex-col gap-4">
-      <h1 class="text-2xl">Poker</h1>
+      <h1 class="text-2xl">Pokerhands</h1>
 
       <div class="relative h-20 my-4">
         {[...Array(state.deck)].map((_, i) => (
