@@ -31,9 +31,7 @@ export default () => {
       {state.error && <div class="p-2 rounded bg-red-100 border border-red-600">{state.error}</div>}
 
       {state.hands.map((hand, i) => (
-        <div>
-          <Hand hand={hand} won={state.ordered && i == 0} />
-        </div>
+        <Hand hand={hand} won={state.ordered && i == 0} />
       ))}
     </main>
   )

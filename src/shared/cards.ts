@@ -25,15 +25,15 @@ export type Hand = [string, string, string, string, string]
 const checkSeq = (arr: number[]): boolean =>
   zip(arr.slice(1), arr).every(([i1, i2]) => i1 - i2 == 1)
 
-const sequential = (nums: string[]): { isSequential: boolean; acesLow: boolean } => {
+const sequential = (nums: string[]): { isSequential: boolean; lowAce: boolean } => {
   const acesHigh = nums.map((n) => NUMS.indexOf(n))
   if (checkSeq(acesHigh)) {
-    return { isSequential: true, acesLow: false }
+    return { isSequential: true, lowAce: false }
   } else if (nums[nums.length - 1] == "a") {
     const acesLow = [-1, ...acesHigh.slice(0, -1)]
-    return { isSequential: checkSeq(acesLow), acesLow: true }
+    return { isSequential: checkSeq(acesLow), lowAce: true }
   }
-  return { isSequential: false, acesLow: false }
+  return { isSequential: false, lowAce: false }
 }
 
 type Rank = (typeof RANKS)[number]
@@ -66,36 +66,36 @@ export const orderHands = (hands: Classification[]): Classification[] =>
 export const classify = (hand: Hand): Classification => {
   hand = hand.sort(compareCards)
   const splitHand = hand.map((c) => c.split(""))
-  const uniqueSuits = [...new Set(splitHand.map((c) => c[0]))]
+  const uniqueSuits = new Set(splitHand.map((c) => c[0])).size
   const nums = splitHand.map((c) => c[1])
+  const { isSequential, lowAce } = sequential(nums)
   const numCounts = frequencies(nums)
-  const uniqueNums = Object.keys(numCounts)
-  const largestGroup = Math.max(...Object.values(numCounts))
-  const orderedNumGroups = Object.entries(numCounts)
+  const uniqueNums = numCounts.size
+  const largestGroup = Math.max(...numCounts.values())
+  const orderedNumGroups = [...numCounts.entries()]
     .sort(
       ([a, aCount], [b, bCount]) =>
         bCount * 100 + NUMS.indexOf(b) - (aCount * 100 + NUMS.indexOf(a))
     )
     .map(([num]) => num)
-  const { isSequential, acesLow } = sequential(nums)
 
-  if (uniqueSuits.length == 1 && isSequential) {
+  if (uniqueSuits == 1 && isSequential) {
     return {
       hand,
       rank: "Straight flush",
-      order: acesLow ? nums.slice(-2, -1) : nums.slice(-1)
+      order: lowAce ? nums.slice(-2, -1) : nums.slice(-1)
     }
   }
 
-  if (uniqueNums.length == 2 && largestGroup == 4) {
+  if (uniqueNums == 2 && largestGroup == 4) {
     return { hand, rank: "Four of a kind", order: orderedNumGroups }
   }
 
-  if (uniqueNums.length == 2 && largestGroup == 3) {
+  if (uniqueNums == 2 && largestGroup == 3) {
     return { hand, rank: "Full house", order: orderedNumGroups }
   }
 
-  if (uniqueSuits.length == 1) {
+  if (uniqueSuits == 1) {
     return { hand, rank: "Flush", order: nums.reverse() }
   }
 
@@ -103,19 +103,19 @@ export const classify = (hand: Hand): Classification => {
     return {
       hand,
       rank: "Straight",
-      order: acesLow ? nums.slice(-2, -1) : nums.slice(-1)
+      order: lowAce ? nums.slice(-2, -1) : nums.slice(-1)
     }
   }
 
-  if (uniqueNums.length == 3 && largestGroup == 3) {
+  if (uniqueNums == 3 && largestGroup == 3) {
     return { hand, rank: "Three of a kind", order: orderedNumGroups }
   }
 
-  if (uniqueNums.length == 3 && largestGroup == 2) {
+  if (uniqueNums == 3 && largestGroup == 2) {
     return { hand, rank: "Two pair", order: orderedNumGroups }
   }
 
-  if (uniqueNums.length == 4 && largestGroup == 2) {
+  if (uniqueNums == 4 && largestGroup == 2) {
     return { hand, rank: "One pair", order: orderedNumGroups }
   }
 

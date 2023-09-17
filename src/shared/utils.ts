@@ -11,11 +11,8 @@ export const shuffle = <T>(arr: T[]): T[] => {
   return result
 }
 
-export const frequencies = (arr: string[]): Record<string, number> =>
-  arr.reduce((groups, el) => {
-    groups[el] = (groups[el] || 0) + 1
-    return groups
-  }, {} as Record<string, number>)
+export const frequencies = <T>(arr: T[]): Map<T, number> =>
+  arr.reduce((groups, el) => groups.set(el, (groups.get(el) || 0) + 1), new Map<T, number>())
 
 export const zip = <T>(arr: T[], ...others: T[][]): T[][] =>
   arr.map((v, i) => [v, ...others.map((o) => o[i])])
