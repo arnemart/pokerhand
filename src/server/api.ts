@@ -6,14 +6,15 @@ export default (
   _opts: FastifyPluginOptions,
   done: (err?: Error) => void
 ) => {
-  server.get("/status", (request, reply) => {
+  server.get("/status", async (request, reply) => {
     reply.send({
       deck: request.session.get("deck").length,
       hands: request.session.get("hands")
     })
+    return reply
   })
 
-  server.post("/shuffle", (request, reply) => {
+  server.post("/shuffle", async (request, reply) => {
     request.session.set("deck", shuffledDeck())
     request.session.set("hands", [])
 
@@ -21,9 +22,10 @@ export default (
       deck: 52,
       hands: []
     })
+    return reply
   })
 
-  server.post("/draw", (request, reply) => {
+  server.post("/draw", async (request, reply) => {
     const deck = request.session.get("deck")
     const hands = request.session.get("hands")
 
@@ -40,15 +42,17 @@ export default (
     } else {
       reply.status(400).send({ error: "Not enough cards in deck" })
     }
+    return reply
   })
 
-  server.post("/order", (request, reply) => {
+  server.post("/order", async (request, reply) => {
     try {
       const orderedHands = orderHands((request.body as { hands: Classification[] }).hands)
       reply.send({ hands: orderedHands })
     } catch (e) {
       reply.status(400).send({ error: "Error parsing hands" })
     }
+    return reply
   })
 
   done()

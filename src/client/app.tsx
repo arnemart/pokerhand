@@ -22,10 +22,22 @@ export default () => {
         ))}
       </div>
 
-      <div class="flex gap-4">
-        <Btn onClick={() => dispatch("shuffle")}>Shuffle</Btn>
-        <Btn onClick={() => dispatch("draw")}>Draw</Btn>
-        <Btn onClick={() => dispatch("order")}>Rank hands</Btn>
+      <div class="flex gap-4 items-baseline">
+        <Btn disabled={state.loading} onClick={() => dispatch("shuffle")}>
+          Shuffle
+        </Btn>
+        <Btn disabled={state.loading} onClick={() => dispatch("draw")}>
+          Draw
+        </Btn>
+        <Btn disabled={state.loading} onClick={() => dispatch("order")}>
+          Rank hands
+        </Btn>
+        <span
+          class={`${state.loading ? "opacity-100" : "opacity-0"}
+            transition-all`}
+        >
+          Loading...
+        </span>
       </div>
 
       {state.error && <div class="p-2 rounded bg-red-100 border border-red-600">{state.error}</div>}
